@@ -41,6 +41,7 @@ namespace CodingChallengeLike.Unit.Tests.Services
         public async Task UpdateLikeAsync_Test(){
             var postRequestViewModelMock = PostMock.PostRequestViewModelFaker.Generate();
             var userRequestViewModelMock = UserMock.UserRequestViewModelFaker.Generate();
+            var postLikedRequestViewModelFaker = PostMock.PostLikedRequestViewModelFaker.Generate();
 
             var service = new LikeService(
                 _postRepositoryMock.Object,
@@ -49,7 +50,7 @@ namespace CodingChallengeLike.Unit.Tests.Services
                 _mapper.Object
             );
 
-            await service.UpdateAsync(userRequestViewModelMock.Id, postRequestViewModelMock.Id, !postRequestViewModelMock.Liked);
+            await service.UpdateAsync(userRequestViewModelMock.Id, postRequestViewModelMock.Id, postLikedRequestViewModelFaker);
         }
 
         [Fact]

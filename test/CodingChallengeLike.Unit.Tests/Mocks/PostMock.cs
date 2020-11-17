@@ -15,6 +15,13 @@ namespace CodingChallengeLike.Unit.Tests.Mocks
                         Liked = x.Random.Bool()
                     }
                 );
+        public static Faker<PostLikedRequestViewModel> PostLikedRequestViewModelFaker =>
+            new Faker<PostLikedRequestViewModel>()
+                .CustomInstantiator(x => new PostLikedRequestViewModel()
+                    {
+                        Liked = x.Random.Bool()
+                    }
+                );
         public static Faker<PostResponseViewModel> PostResponseViewModelFaker =>
             new Faker<PostResponseViewModel>()
                 .CustomInstantiator(x => new PostResponseViewModel()
