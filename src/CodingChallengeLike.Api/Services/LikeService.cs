@@ -67,8 +67,8 @@ namespace CodingChallengLike.Api.Services
             };
         }
 
-        public async Task UpdateAsync(string userId, string postId, bool liked){
-            await _postRepository.UpdateAsync(_identityService.GetApplicationId(), userId, postId, liked);
+        public async Task UpdateAsync(string userId, string postId, PostLikedRequestViewModel postLikedRequestViewModel){
+            await _postRepository.UpdateAsync(_identityService.GetApplicationId(), userId, postId, postLikedRequestViewModel.Liked);
         }
 
         public async Task DeleteAsync(string userId, string postId){
