@@ -1,7 +1,11 @@
+using System;
+
 namespace CodingChallengeLike.Api.ViewModels
 {
     public class PostResponseViewModel{
-        public long Id {get;set;}
-        public string Name {get;set;}
+        public string Id { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string Title { get; set; }
+        public bool Liked { get; set; }
     }
 }

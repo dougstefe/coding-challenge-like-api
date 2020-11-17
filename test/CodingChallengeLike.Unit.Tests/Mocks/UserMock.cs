@@ -1,5 +1,6 @@
 using Bogus;
 using CodingChallengeLike.Api.ViewModels;
+using CodingChallengeLike.Domain.Models;
 
 namespace CodingChallengeLike.Unit.Tests.Mocks
 {
@@ -8,15 +9,15 @@ namespace CodingChallengeLike.Unit.Tests.Mocks
             new Faker<UserRequestViewModel>()
                 .CustomInstantiator(x => new UserRequestViewModel()
                     {
-                        Id = x.Random.Long(1),
+                        Id = x.Random.Guid().ToString(),
                         Name = x.Random.Word()
                     }
                 );
-        public static Faker<UserResponseViewModel> UserResponseViewModelFaker =>
-            new Faker<UserResponseViewModel>()
-                .CustomInstantiator(x => new UserResponseViewModel()
+        public static Faker<UserRequestModel> UserRequestModelFaker =>
+            new Faker<UserRequestModel>()
+                .CustomInstantiator(x => new UserRequestModel()
                     {
-                        Id = x.Random.Long(1),
+                        Id = x.Random.Guid().ToString(),
                         Name = x.Random.Word()
                     }
                 );

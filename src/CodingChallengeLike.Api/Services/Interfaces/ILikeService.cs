@@ -4,8 +4,8 @@ using CodingChallengeLike.Api.ViewModels;
 namespace CodingChallengLike.Api.Services.Interfaces
 {
     public interface ILikeService{
-        Task<LikeResponseViewModel> InsertAsync(LikeRequestViewModel likeRequestViewModel);
-        Task UpdateAsync(LikeRequestViewModel likeRequestViewModel);
-        Task DeleteAsync(LikeRequestViewModel likeRequestViewModel);
+        Task<PostResponseViewModel> InsertAsync(PostRequestViewModel postViewModel);
+        Task UpdateAsync(string userId, string postId, bool liked);
+        Task DeleteAsync(string userId, string postId);
     }
 }
