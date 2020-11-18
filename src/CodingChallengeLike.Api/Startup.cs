@@ -46,7 +46,9 @@ namespace CodingChallengeLike.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddMvc()
+            services.AddMvc(options => {
+                    options.EnableEndpointRouting = false;
+                })
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.IgnoreNullValues = true;
@@ -83,8 +85,8 @@ namespace CodingChallengeLike.Api
             {
                 document.DocumentName = "v1";
                 document.Version = "v1";
-                document.Title = "Sx1 API";
-                document.Description = "API do Sx1";
+                document.Title = "Like API";
+                document.Description = "API to count likes in posts";
                 document.GenerateXmlObjects = false;
                 document.SchemaNameGenerator = new CustomSchemaNameGenerator();
             });
@@ -95,7 +97,7 @@ namespace CodingChallengeLike.Api
                 {
                     options.AddDefaultPolicy(builder =>
                     {
-                        builder.WithOrigins(Configuration.GetSection("RockContent")["Gateway"])
+                        builder.WithOrigins(Configuration["Gateway"])
                             .AllowAnyHeader()
                             .AllowAnyMethod();
                     });
@@ -123,8 +125,8 @@ namespace CodingChallengeLike.Api
             }
 
             app.UseCors();
-            app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseHttpsRedirection();
             app.UseResponseCompression();
             app.UseAuthorization();
             app.UseAuthentication();
@@ -134,6 +136,9 @@ namespace CodingChallengeLike.Api
             {
                 ExceptionHandler = new ErrorHandlerMiddleware(options, env).Invoke
             });
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {
