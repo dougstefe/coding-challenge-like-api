@@ -13,6 +13,7 @@ namespace CodingChallengeLike.Infra.Identity
         }
         
         public string GetApplicationId() => _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("application-id"))?.Value;
+        public string GetScope() => _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals("scope"))?.Value;
         
     }
 }
