@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using CodingChallengeLike.Domain.Models;
 
-namespace CodingChallengLike.Domain.Interfaces.Repositories
+namespace CodingChallengeLike.Domain.Interfaces.Repositories
 {
     public interface IPostRepository{
         Task<int> InsertAsync(PostInsertDapper post);

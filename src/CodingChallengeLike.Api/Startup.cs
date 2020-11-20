@@ -13,9 +13,9 @@ using CodingChallengeLike.Domain.Interfaces.Identity;
 using CodingChallengeLike.Infra.Context;
 using CodingChallengeLike.Infra.Identity;
 using CodingChallengeLike.Infra.Repositories;
-using CodingChallengLike.Api.Services;
-using CodingChallengLike.Api.Services.Interfaces;
-using CodingChallengLike.Domain.Interfaces.Repositories;
+using CodingChallengeLike.Api.Services;
+using CodingChallengeLike.Api.Services.Interfaces;
+using CodingChallengeLike.Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +28,18 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
+using CodingChallengeLike.Infra.Services;
+using CodingChallengeLike.Domain.Interfaces.Services;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
+using Polly;
+using CodingChallengeLike.Domain.Interfaces.Notifications;
+using CodingChallengeLike.Domain.Notifications;
+using CodingChallengeLike.Api.Filters;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
+using NSwag.Generation.Processors.Security;
+using NSwag;
 
 namespace CodingChallengeLike.Api
 {
@@ -47,6 +59,7 @@ namespace CodingChallengeLike.Api
         {
             services.AddControllers();
             services.AddMvc(options => {
+                    options.Filters.Add<DomainNotificationFilter>();
                     options.EnableEndpointRouting = false;
                 })
                 .AddJsonOptions(options =>
@@ -87,7 +100,7 @@ namespace CodingChallengeLike.Api
                 document.Version = "v1";
                 document.Title = "Like API";
                 document.Description = "API to count likes in posts";
-                document.GenerateXmlObjects = false;
+                document.GenerateXmlObjects = true;
                 document.SchemaNameGenerator = new CustomSchemaNameGenerator();
             });
 
@@ -142,6 +155,16 @@ namespace CodingChallengeLike.Api
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    Predicate = r => r.Tags.Contains("self"),
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecks("/ready", new HealthCheckOptions
+                {
+                    Predicate = r => r.Tags.Contains("services"),
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
                 endpoints.MapHealthChecksUI(opt =>
                 {
                     opt.UIPath = "/health-ui";
@@ -155,11 +178,31 @@ namespace CodingChallengeLike.Api
             services.Configure<ApplicationInsightsSettings>(Configuration.GetSection("ApplicationInsights"));
 
             services.AddScoped<ILikeService, LikeService>();
+            services.AddScoped<IApplicationService, ApplicationService>();
+            
+            services.AddScoped<IDomainNotification, DomainNotification>();
 
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<DapperContext>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IApplicationRepository, ApplicationRepository>();
+
+            services.AddHttpClient<ISsoService, SsoService>((s, c) =>
+            {
+                c.BaseAddress = new Uri(Configuration["IdentityServer:Authority"]);
+                c.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            }).AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.OrResult(response =>
+            {
+                var status = (int)response.StatusCode;
+                return status.Equals(StatusCodes.Status500InternalServerError) || status.Equals(StatusCodes.Status502BadGateway) || status.Equals(StatusCodes.Status503ServiceUnavailable) || status.Equals(StatusCodes.Status504GatewayTimeout);
+            }).WaitAndRetryAsync(3, retry =>
+                   TimeSpan.FromSeconds(Math.Pow(2, retry)) +
+                   TimeSpan.FromMilliseconds(new Random().Next(0, 100))))
+              .AddTransientHttpErrorPolicy(policyBuilder => policyBuilder.CircuitBreakerAsync(
+                   handledEventsAllowedBeforeBreaking: 3,
+                   durationOfBreak: TimeSpan.FromSeconds(30)
+            ));
 
         }
     }

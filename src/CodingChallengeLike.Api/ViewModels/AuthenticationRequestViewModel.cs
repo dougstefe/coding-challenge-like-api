@@ -3,10 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CodingChallengeLike.Api.ViewModels
 {
-    public class ApplicationResponseViewModel{
+    public class AuthenticationRequestViewModel{
         /// <summary>
-        /// Generated track code
+        /// Track code to authentication
         /// </summary>
+        [Required(ErrorMessage = "Field 'TrackCode' is required.")]
         public string TrackCode { get; set; }
     }
 }

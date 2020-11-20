@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using CodingChallengeLike.Domain.Models;
 using CodingChallengeLike.Infra.Context;
-using CodingChallengLike.Domain.Interfaces.Repositories;
+using CodingChallengeLike.Domain.Interfaces.Repositories;
 using Dapper;
 
 namespace CodingChallengeLike.Infra.Repositories
@@ -15,75 +15,33 @@ namespace CodingChallengeLike.Infra.Repositories
             _dapperContext = dapperContext;
         }
         
-        public async Task<int> InsertAsync(ApplicationInsertDapper post){
+        public async Task<int> InsertAsync(ApplicationInsertDapper application){
             string sqlInsert = @"INSERT INTO
-                [ChalengeLike].[Post]
+                [ChalengeLike].[Application]
                 (
                     Id,
-                    ApplicationId,
-                    UserId,
-                    CreatedDate,
-                    Title,
-                    Liked
+                    Secret,
+                    Domains
                 )
                 VALUES
                 (
                     @Id,
-                    @ApplicationId,
-                    @UserId,
-                    @CreatedDate,
-                    @Title,
-                    @Liked
+                    @Secret,
+                    @Domains
                 );";
-            var result = await _dapperContext.DapperConnection.ExecuteAsync(sqlInsert, post);
+            var result = await _dapperContext.DapperConnection.ExecuteAsync(sqlInsert, application);
             return result;
         }
-        public async Task<int> UpdateAsync(string applicationId, string userId, string postId, bool liked){
-            string sqlUpdate = @"UPDATE [ChalengeLike].[Post]
-                SET
-                    Liked = @Liked
-                WHERE
-                    Id = @Id,
-                    ApplicationId = @ApplicationId,
-                    UserId = @UserId;";
-            var result = await _dapperContext.DapperConnection.ExecuteAsync(sqlUpdate, new {
-                Liked = liked,
-                Id = postId,
-                ApplicationId = applicationId,
-                UserId = userId
-            });
-            return result;
-        }
-        public async Task<int> DeleteAsync(string applicationId, string userId, string postId){
-            string sqlDelete = @"DELETE
-                FROM
-                    [ChalengeLike].[Post]
-                WHERE
-                    Id = @Id,
-                    ApplicationId = @ApplicationId,
-                    UserId = @UserId;";
-            var result = await _dapperContext.DapperConnection.ExecuteAsync(sqlDelete, new {
-                Id = postId,
-                ApplicationId = applicationId,
-                UserId = userId
-            });
-            return result;
-        }
-        public async Task<PostDapper> GetAsync(string applicationId, string userId, string postId){
+        public async Task<ApplicationDapper> SelectAsync(string Id){
             var sqlSelect = @"SELECT
                     Id,
-                    CreatedDate,
-                    Title,
-                    Liked
+                    Secret,
+                    Domains
                 FROM
-                    [ChalengeLike].[Post]
+                    [ChalengeLike].[Application]
                 WHERE 
-                    Id=@Id AND ApplicationId=@ApplicationId AND UserId=@UserId";
-            return await _dapperContext.DapperConnection.QueryFirstOrDefaultAsync<PostDapper>(sqlSelect, new {
-                Id = postId,
-                ApplicationId = applicationId,
-                UserId = userId
-            });
+                    Id=@Id";
+            return await _dapperContext.DapperConnection.QueryFirstOrDefaultAsync<ApplicationDapper>(sqlSelect, new { Id });
         }
     }
 }

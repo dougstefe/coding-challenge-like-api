@@ -3,8 +3,8 @@ using AutoMapper;
 using CodingChallengeLike.Domain.Interfaces.Identity;
 using CodingChallengeLike.Domain.Models;
 using CodingChallengeLike.Unit.Tests.Mocks;
-using CodingChallengLike.Api.Services;
-using CodingChallengLike.Domain.Interfaces.Repositories;
+using CodingChallengeLike.Api.Services;
+using CodingChallengeLike.Domain.Interfaces.Repositories;
 using Moq;
 using Xunit;
 

@@ -1,9 +1,10 @@
 using System.Threading.Tasks;
 using CodingChallengeLike.Domain.Models;
 
-namespace CodingChallengLike.Domain.Interfaces.Repositories
+namespace CodingChallengeLike.Domain.Interfaces.Repositories
 {
     public interface IApplicationRepository{
         Task<int> InsertAsync(ApplicationInsertDapper application);
+        Task<ApplicationDapper> SelectAsync(string Id);
     }
 }

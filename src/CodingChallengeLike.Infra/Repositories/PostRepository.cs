@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using CodingChallengeLike.Domain.Models;
 using CodingChallengeLike.Infra.Context;
-using CodingChallengLike.Domain.Interfaces.Repositories;
+using CodingChallengeLike.Domain.Interfaces.Repositories;
 using Dapper;
 
 namespace CodingChallengeLike.Infra.Repositories

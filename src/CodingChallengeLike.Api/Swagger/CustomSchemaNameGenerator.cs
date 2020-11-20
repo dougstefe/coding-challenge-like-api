@@ -1,4 +1,5 @@
-﻿using NJsonSchema.Generation;
+﻿using NJsonSchema;
+using NJsonSchema.Generation;
 using System;
 
 namespace CodingChallengeLike.Api.Swagger

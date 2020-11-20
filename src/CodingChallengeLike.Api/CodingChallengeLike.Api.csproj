@@ -17,8 +17,11 @@
     <PackageReference Include="AspNetCore.HealthChecks.System" Version="3.1.2" />
     <PackageReference Include="AspNetCore.HealthChecks.UI" Version="3.0.9" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="3.1.7" />
   </ItemGroup>
-
+<PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\CodingChallengeLike.Domain\CodingChallengeLike.Domain.csproj" />
     <ProjectReference Include="..\..\src\CodingChallengeLike.Infra\CodingChallengeLike.Infra.csproj" />
