@@ -4,10 +4,10 @@ using AutoMapper;
 using CodingChallengeLike.Api.ViewModels;
 using CodingChallengeLike.Domain.Interfaces.Identity;
 using CodingChallengeLike.Domain.Models;
-using CodingChallengLike.Api.Services.Interfaces;
-using CodingChallengLike.Domain.Interfaces.Repositories;
+using CodingChallengeLike.Api.Services.Interfaces;
+using CodingChallengeLike.Domain.Interfaces.Repositories;
 
-namespace CodingChallengLike.Api.Services
+namespace CodingChallengeLike.Api.Services
 {
     public class LikeService : ILikeService{
         
@@ -67,12 +67,12 @@ namespace CodingChallengLike.Api.Services
             };
         }
 
-        public async Task UpdateAsync(string userId, string postId, PostLikedRequestViewModel postLikedRequestViewModel){
-            await _postRepository.UpdateAsync(_identityService.GetApplicationId(), userId, postId, postLikedRequestViewModel.Liked);
+        public async Task<int> UpdateAsync(string userId, string postId, PostLikedRequestViewModel postLikedRequestViewModel){
+            return await _postRepository.UpdateAsync(_identityService.GetApplicationId(), userId, postId, postLikedRequestViewModel.Liked);
         }
 
-        public async Task DeleteAsync(string userId, string postId){
-            await _postRepository.DeleteAsync(_identityService.GetApplicationId(), userId, postId);
+        public async Task<int> DeleteAsync(string userId, string postId){
+            return await _postRepository.DeleteAsync(_identityService.GetApplicationId(), userId, postId);
         }
 
     }
