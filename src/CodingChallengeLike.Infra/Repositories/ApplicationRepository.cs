@@ -6,16 +6,16 @@ using Dapper;
 
 namespace CodingChallengeLike.Infra.Repositories
 {
-    public class PostRepository : IPostRepository
+    public class ApplicationRepository : IApplicationRepository
     {
         private readonly DapperContext _dapperContext;
 
-        public PostRepository(DapperContext dapperContext)
+        public ApplicationRepository(DapperContext dapperContext)
         {
             _dapperContext = dapperContext;
         }
         
-        public async Task<int> InsertAsync(PostInsertDapper post){
+        public async Task<int> InsertAsync(ApplicationInsertDapper post){
             string sqlInsert = @"INSERT INTO
                 [ChalengeLike].[Post]
                 (
